@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /** 出餐扣庫存、採購收貨、樂觀鎖：庫存正確性是這個系統最核心的規則 */
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(roles = "OWNER") // 權限規則另由 AuthApiTest 驗證，這裡以總部身分測試業務邏輯
 class InventoryServiceTest {
 
     @Autowired InventoryService service;

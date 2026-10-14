@@ -27,6 +27,8 @@ services:
       DB_URL: jdbc:mysql://db:3306/ris?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       DB_USERNAME: root
       DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:-}           # 選填；不設定則每次啟動隨機產生
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo1234}
     ports:
       - "8080:8080"
     depends_on:

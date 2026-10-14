@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /** 通用 CRUD 行為要和 json-server 一致，前端才能直接換成這個後端 */
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(roles = "OWNER") // 權限規則另由 AuthApiTest 驗證，這裡以總部身分測試業務邏輯
 class CrudApiTest {
 
     @Autowired MockMvc mvc;

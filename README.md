@@ -9,6 +9,7 @@
 | 框架 | Spring Boot 3.5、Java 21 |
 | 資料庫 | MySQL 8（測試使用 H2 記憶體資料庫） |
 | 資料存取 | Spring Data JPA／Hibernate |
+| 驗證 | Spring Security、JWT（OAuth2 Resource Server，HS256） |
 | 測試 | JUnit 5、MockMvc、AssertJ |
 | 部署 | Docker、Docker Compose、GitHub Actions CI |
 
@@ -20,7 +21,27 @@
 - **出餐扣庫存放在後端交易中**：`POST /api/salesOrders/{id}/complete` 用 `@Transactional` 包成一筆交易。依配方計算用量 → 先檢查所有食材 → 逐一扣減並寫異動紀錄；任何一步失敗就整筆還原，不會「扣了一半」。
 - **樂觀鎖防止超賣**：扣庫存使用條件更新 `UPDATE … WHERE id = ? AND version = ?`。兩台收銀機同時出餐時，只有一邊會成功，另一邊得到 `409 STOCK_CONFLICT`，由資料庫保證一致性。
 - **標準錯誤格式**：使用 Problem Details（RFC 9457），例如 `{"status":422,"title":"INSUFFICIENT_STOCK","detail":"庫存不足，無法完成訂單：麵條"}`。
+- **JWT 登入與角色權限**：`POST /api/auth/login` 回傳有效 8 小時的 JWT，之後每個請求帶 `Authorization: Bearer <token>`。後端依角色擋下沒有權限的請求（前端只負責隱藏按鈕，真正的防線在後端）。密碼以 BCrypt 雜湊儲存；簽章金鑰從環境變數讀取，沒設定時啟動時隨機產生，金鑰不會出現在程式碼裡。
 - **密碼不進版控**：連線資訊全部由環境變數提供，`.env` 已列入 `.gitignore`。
+
+## 登入與權限
+
+第一次啟動會建立三個示範帳號（密碼預設 `demo1234`，可用 `DEMO_PASSWORD` 改）：
+
+| 帳號 | 角色 | 可以做的事 |
+|---|---|---|
+| `owner` | 總部 | 全部功能 |
+| `manager` | 店長・左營店 | 編輯食材、查看採購單、點餐出餐退款 |
+| `staff` | 員工・左營店 | 點餐、出餐；其他唯讀，無法查看採購單 |
+
+| 規則 | 總部 | 店長 | 員工 |
+|---|:-:|:-:|:-:|
+| 讀取一般資料 | ✅ | ✅ | ✅ |
+| 菜單商品新增／修改／刪除 | ✅ | 403 | 403 |
+| 食材新增／修改／刪除 | ✅ | ✅ | 403 |
+| 查看採購單 | ✅ | ✅ | 403 |
+| 建立／修改採購單、收貨 | ✅ | 403 | 403 |
+| 未登入 | 401 | 401 | 401 |
 
 ## API 一覽
 
@@ -37,6 +58,8 @@
 
 | 業務動作 | 說明 |
 |---|---|
+| `POST /api/auth/login` | 登入，回傳 JWT 與使用者資料 |
+| `GET /api/auth/me` | 依 token 取得目前使用者 |
 | `POST /api/salesOrders/{id}/complete` | 出餐完成：依配方扣庫存（僅限「準備中」）|
 | `POST /api/purchaseOrders/{id}/receive` | 採購收貨：增加庫存（僅限「已下單」）|
 
@@ -85,10 +108,11 @@ mvn verify
 - 樂觀鎖：版本號不符時不更新
 - 採購收貨增加庫存
 - API 錯誤回應格式（422 INSUFFICIENT_STOCK）
+- 登入成功／失敗、未登入 401、竄改 token 無效、各角色的 403 權限規則
 
 ## 後續規劃
 
-- JWT 登入與角色權限（總部／店長／員工），取代前端的示範身分
+- 門市資料隔離：店長、員工只能讀寫自己門市的訂單（目前由前端篩選）
 - Flyway 管理資料表版本（目前開發階段使用 `ddl-auto: update`）
 - 前端「出餐完成」改呼叫後端 `/complete` 端點，取代前端逐筆呼叫
 - Testcontainers：CI 改用真的 MySQL 跑測試

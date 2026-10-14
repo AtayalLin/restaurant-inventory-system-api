@@ -21,3 +21,6 @@ server:
 app:
   seed:
     enabled: ${APP_SEED:true}
+  jwt:
+    secret: ${JWT_SECRET:}            # 至少 32 字元；不設定則每次啟動隨機產生
+  demo-password: ${DEMO_PASSWORD:demo1234}
