@@ -27,4 +27,7 @@ public class Ingredient extends BaseEntity {
     @Column(precision = 14, scale = 4)
     private BigDecimal costPerUnit = BigDecimal.ZERO;
     private Integer version = 0;
+    /** 最低訂購量：採購單低於此數量會被拒絕；0 代表不限 */
+    @Column(precision = 14, scale = 3)
+    private BigDecimal minOrderQty = BigDecimal.ZERO;
 }

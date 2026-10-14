@@ -20,6 +20,7 @@
 - **與前端零改動對接**：網址與行為對齊 json-server（`GET/POST/PUT/PATCH/DELETE /api/{資源}`、字串 id、PATCH 只更新有傳的欄位、找不到回 404），前端只要改一行環境變數就能從 json-server 換過來。通用邏輯集中在 `CrudController`，每個資源只要宣告網址。
 - **出餐扣庫存放在後端交易中**：`POST /api/salesOrders/{id}/complete` 用 `@Transactional` 包成一筆交易。依配方計算用量 → 先檢查所有食材 → 逐一扣減並寫異動紀錄；任何一步失敗就整筆還原，不會「扣了一半」。
 - **樂觀鎖防止超賣**：扣庫存使用條件更新 `UPDATE … WHERE id = ? AND version = ?`。兩台收銀機同時出餐時，只有一邊會成功，另一邊得到 `409 STOCK_CONFLICT`，由資料庫保證一致性。
+- **叫貨規則在後端把關**：建立或修改採購單時，任一品項低於食材的最低訂購量就回 `422 BELOW_MIN_ORDER`（`CrudController.validate()` 讓各資源加入自己的業務規則）。供應商可設定叫貨日（`orderDays`）。
 - **標準錯誤格式**：使用 Problem Details（RFC 9457），例如 `{"status":422,"title":"INSUFFICIENT_STOCK","detail":"庫存不足，無法完成訂單：麵條"}`。
 - **JWT 登入與角色權限**：`POST /api/auth/login` 回傳有效 8 小時的 JWT，之後每個請求帶 `Authorization: Bearer <token>`。後端依角色擋下沒有權限的請求（前端只負責隱藏按鈕，真正的防線在後端）。密碼以 BCrypt 雜湊儲存；簽章金鑰從環境變數讀取，沒設定時啟動時隨機產生，金鑰不會出現在程式碼裡。
 - **密碼不進版控**：連線資訊全部由環境變數提供，`.env` 已列入 `.gitignore`。
@@ -107,6 +108,7 @@ mvn verify
 - 非「準備中」訂單不能出餐
 - 樂觀鎖：版本號不符時不更新
 - 採購收貨增加庫存
+- 採購單低於最低訂購量回 422，達到即可建立
 - API 錯誤回應格式（422 INSUFFICIENT_STOCK）
 - 登入成功／失敗、未登入 401、竄改 token 無效、各角色的 403 權限規則
 

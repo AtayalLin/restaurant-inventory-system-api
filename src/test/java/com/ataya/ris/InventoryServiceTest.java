@@ -118,6 +118,23 @@ class InventoryServiceTest {
     }
 
     @Test
+    void 採購單低於最低訂購量回422() throws Exception {
+        Ingredient beef = ingredients.findById("beef").orElseThrow();
+        beef.setMinOrderQty(new BigDecimal("1000"));
+        ingredients.save(beef);
+        String body = """
+                {"supplierId":"s1","status":"PENDING","totalAmount":150,
+                 "items":[{"ingredientId":"beef","quantity":500,"unitPrice":0.3}]}""";
+        mvc.perform(post("/api/purchaseOrders").contentType(org.springframework.http.MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.title").value("BELOW_MIN_ORDER"));
+        // 達到最低訂購量就可以建立
+        mvc.perform(post("/api/purchaseOrders").contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(body.replace("\"quantity\":500", "\"quantity\":1000")))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void API庫存不足回422與錯誤代碼() throws Exception {
         salesOrders.save(order("o1", SalesOrder.Status.PREPARING, 4));
         mvc.perform(post("/api/salesOrders/o1/complete"))

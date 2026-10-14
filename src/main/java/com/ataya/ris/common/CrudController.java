@@ -49,6 +49,7 @@ public abstract class CrudController<T extends BaseEntity> {
         } else if (repository.existsById(body.getId())) {
             throw new BusinessException(HttpStatus.CONFLICT, "DUPLICATE_ID", resourceName + " id 已存在：" + body.getId());
         }
+        validate(body);
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(body));
     }
 
@@ -57,6 +58,7 @@ public abstract class CrudController<T extends BaseEntity> {
         T existing = find(id);
         body.setId(id);
         if (body.getCreatedAt() == null) body.setCreatedAt(existing.getCreatedAt()); // 保留原建立時間
+        validate(body);
         return repository.save(body);
     }
 
@@ -66,6 +68,7 @@ public abstract class CrudController<T extends BaseEntity> {
         // readerForUpdating：把請求中有的欄位覆蓋到現有資料上，沒傳的欄位保持不變
         mapper.readerForUpdating(entity).readValue(changes);
         entity.setId(id); // 不允許透過 PATCH 改 id
+        validate(entity);
         return repository.save(entity);
     }
 
@@ -74,6 +77,10 @@ public abstract class CrudController<T extends BaseEntity> {
         T entity = find(id);
         repository.delete(entity);
         return entity;
+    }
+
+    /** 儲存前的業務規則檢查；子類別覆寫，違反時丟出 BusinessException */
+    protected void validate(T entity) {
     }
 
     private T find(String id) {

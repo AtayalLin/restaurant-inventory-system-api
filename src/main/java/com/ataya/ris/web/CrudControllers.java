@@ -1,9 +1,11 @@
 package com.ataya.ris.web;
 
+import com.ataya.ris.common.BusinessException;
 import com.ataya.ris.common.CrudController;
 import com.ataya.ris.domain.*;
 import com.ataya.ris.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +39,26 @@ class SupplierController extends CrudController<Supplier> {
 
 @RestController @RequestMapping("/api/purchaseOrders")
 class PurchaseOrderController extends CrudController<PurchaseOrder> {
-    PurchaseOrderController(PurchaseOrderRepository r, ObjectMapper m) { super(r, m, "採購單"); }
+    private final IngredientRepository ingredients;
+
+    PurchaseOrderController(PurchaseOrderRepository r, ObjectMapper m, IngredientRepository ingredients) {
+        super(r, m, "採購單");
+        this.ingredients = ingredients;
+    }
+
+    /** 叫貨規則：每一項都不能低於該食材的最低訂購量（前端也會檢查，這裡防止繞過前端直接呼叫 API） */
+    @Override
+    protected void validate(PurchaseOrder order) {
+        for (PurchaseOrder.Item item : order.getItems()) {
+            ingredients.findById(item.getIngredientId()).ifPresent(ing -> {
+                if (ing.getMinOrderQty() != null && item.getQuantity() != null
+                        && item.getQuantity().compareTo(ing.getMinOrderQty()) < 0) {
+                    throw new BusinessException(HttpStatus.UNPROCESSABLE_ENTITY, "BELOW_MIN_ORDER",
+                            "「" + ing.getName() + "」低於最低訂購量 " + ing.getMinOrderQty().stripTrailingZeros().toPlainString() + " " + ing.getUnit());
+                }
+            });
+        }
+    }
 }
 
 @RestController @RequestMapping("/api/salesOrders")
