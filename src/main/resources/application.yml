@@ -3,7 +3,7 @@ spring:
   application:
     name: restaurant-inventory-system-api
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/ris?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/ris?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:}
   jpa:
