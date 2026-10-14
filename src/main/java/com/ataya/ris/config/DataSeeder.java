@@ -4,7 +4,6 @@ import com.ataya.ris.domain.*;
 import com.ataya.ris.repository.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,7 +21,6 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
 @ConditionalOnProperty(name = "app.seed.enabled", havingValue = "true", matchIfMissing = true)
 class DataSeeder implements CommandLineRunner {
 
@@ -34,6 +32,20 @@ class DataSeeder implements CommandLineRunner {
     private final SupplierRepository suppliers;
     private final PurchaseOrderRepository purchaseOrders;
     private final SalesOrderRepository salesOrders;
+
+    // 建構子注入：依賴在建立物件時就確定，欄位可以宣告 final，也方便測試時替換
+    DataSeeder(ObjectMapper mapper, StoreRepository stores, ProductCategoryRepository categories, ProductRepository products,
+               IngredientRepository ingredients, SupplierRepository suppliers,
+               PurchaseOrderRepository purchaseOrders, SalesOrderRepository salesOrders) {
+        this.mapper = mapper;
+        this.stores = stores;
+        this.categories = categories;
+        this.products = products;
+        this.ingredients = ingredients;
+        this.suppliers = suppliers;
+        this.purchaseOrders = purchaseOrders;
+        this.salesOrders = salesOrders;
+    }
 
     @Override
     public void run(String... args) throws Exception {

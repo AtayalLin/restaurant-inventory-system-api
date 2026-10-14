@@ -3,7 +3,6 @@ package com.ataya.ris.web;
 import com.ataya.ris.domain.PurchaseOrder;
 import com.ataya.ris.domain.SalesOrder;
 import com.ataya.ris.service.InventoryService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,10 +12,14 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 class OperationsController {
 
     private final InventoryService inventoryService;
+
+    // 建構子注入：依賴在建立物件時就確定，欄位可以宣告 final，也方便測試時替換
+    OperationsController(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
 
     @PostMapping("/salesOrders/{id}/complete")
     SalesOrder completeSalesOrder(@PathVariable String id) {

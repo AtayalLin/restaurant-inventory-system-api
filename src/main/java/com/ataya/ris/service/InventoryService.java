@@ -5,7 +5,6 @@ import com.ataya.ris.domain.*;
 import com.ataya.ris.domain.StockLog.ChangeType;
 import com.ataya.ris.domain.StockLog.ReferenceType;
 import com.ataya.ris.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
  * 任何一步失敗（庫存不足、被同時修改）就整筆還原。
  */
 @Service
-@RequiredArgsConstructor
 public class InventoryService {
 
     private final SalesOrderRepository salesOrders;
@@ -31,6 +29,16 @@ public class InventoryService {
     private final ProductRepository products;
     private final IngredientRepository ingredients;
     private final StockLogRepository stockLogs;
+
+    // 建構子注入：依賴在建立物件時就確定，欄位可以宣告 final，也方便測試時替換
+    public InventoryService(SalesOrderRepository salesOrders, PurchaseOrderRepository purchaseOrders, ProductRepository products,
+                            IngredientRepository ingredients, StockLogRepository stockLogs) {
+        this.salesOrders = salesOrders;
+        this.purchaseOrders = purchaseOrders;
+        this.products = products;
+        this.ingredients = ingredients;
+        this.stockLogs = stockLogs;
+    }
 
     /** 出餐完成：依配方扣減食材庫存，訂單改為已完成 */
     @Transactional
