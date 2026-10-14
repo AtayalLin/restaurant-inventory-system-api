@@ -1,0 +1,368 @@
+{
+  "stores": [
+    {
+      "id": "st1",
+      "name": "左營店",
+      "address": "高雄市左營區博愛二路 100 號"
+    },
+    {
+      "id": "st2",
+      "name": "鳳山店",
+      "address": "高雄市鳳山區光遠路 200 號"
+    }
+  ],
+  "products": [
+    {
+      "id": "p001",
+      "name": "招牌牛肉麵",
+      "categoryId": "cat001",
+      "price": 180,
+      "taxType": "TAX_5",
+      "description": "秘傳入味的老坑骨湯底，燉煮至骨香四溢、乳白濃郁。搭配筍殼入口即化的五花肉、Q徹的手切麵條與鮮嫩牛肉片，每一口都是濃郁的家鄉味，讓你在嘗盡人間美味後，仍念念不忘回味無窮。",
+      "imageUrl": null,
+      "recipe": [
+        {
+          "ingredientId": "i001",
+          "quantity": 200
+        },
+        {
+          "ingredientId": "i002",
+          "quantity": 150
+        }
+      ],
+      "isActive": true,
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    },
+    {
+      "id": "p002",
+      "name": "滷肉飯",
+      "categoryId": "cat001",
+      "price": 60,
+      "taxType": "TAX_5",
+      "description": "古早味滷肉，香氣十足。",
+      "imageUrl": null,
+      "recipe": [
+        {
+          "ingredientId": "i003",
+          "quantity": 80
+        }
+      ],
+      "isActive": true,
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    },
+    {
+      "id": "p003",
+      "name": "珍珠奶茶",
+      "categoryId": "cat002",
+      "price": 65,
+      "taxType": "TAX_5",
+      "description": "Q彈珍珠搭配香濃奶茶。",
+      "imageUrl": null,
+      "recipe": [
+        {
+          "ingredientId": "i004",
+          "quantity": 30
+        }
+      ],
+      "isActive": true,
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    }
+  ],
+  "productCategories": [
+    {
+      "id": "cat001",
+      "name": "主食"
+    },
+    {
+      "id": "cat002",
+      "name": "飲料"
+    },
+    {
+      "id": "cat003",
+      "name": "甜點"
+    }
+  ],
+  "ingredients": [
+    {
+      "id": "i001",
+      "name": "牛腱肉",
+      "unit": "g",
+      "category": "肉類",
+      "supplierId": "s001",
+      "currentStock": 1000,
+      "safetyStock": 1000,
+      "expiryDays": 3,
+      "costPerUnit": 0.3,
+      "createdAt": "2026-06-01T08:00:00.000Z",
+      "version": 1
+    },
+    {
+      "id": "i002",
+      "name": "麵條",
+      "unit": "g",
+      "category": "乾貨",
+      "supplierId": "s002",
+      "currentStock": 750,
+      "safetyStock": 2000,
+      "expiryDays": 180,
+      "costPerUnit": 0.04,
+      "createdAt": "2026-06-01T08:00:00.000Z",
+      "version": 1
+    },
+    {
+      "id": "i003",
+      "name": "豬五花肉",
+      "unit": "g",
+      "category": "肉類",
+      "supplierId": "s001",
+      "currentStock": 500,
+      "safetyStock": 500,
+      "expiryDays": 3,
+      "costPerUnit": 0.2,
+      "createdAt": "2026-06-01T08:00:00.000Z",
+      "version": 1
+    },
+    {
+      "id": "i004",
+      "name": "珍珠粉圓",
+      "unit": "g",
+      "category": "飲料原料",
+      "supplierId": "s002",
+      "currentStock": 2000,
+      "safetyStock": 1000,
+      "expiryDays": 7,
+      "costPerUnit": 0.08,
+      "createdAt": "2026-06-01T08:00:00.000Z",
+      "version": 0
+    }
+  ],
+  "stockLogs": [],
+  "suppliers": [
+    {
+      "id": "s001",
+      "name": "台灣生鮮肉品行",
+      "contact": "陳老闆",
+      "phone": "0912-345-678",
+      "paymentTerm": "月結30天",
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    },
+    {
+      "id": "s002",
+      "name": "南北乾貨批發",
+      "contact": "林小姐",
+      "phone": "0923-456-789",
+      "paymentTerm": "貨到付款",
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    }
+  ],
+  "purchaseOrders": [
+    {
+      "supplierId": "s001",
+      "status": "RECEIVED",
+      "items": [
+        {
+          "ingredientId": "i001",
+          "quantity": 1,
+          "unitPrice": 500
+        }
+      ],
+      "totalAmount": 500,
+      "expectedDate": "2026-06-05",
+      "receivedDate": "2026-06-25T07:08:50.639Z",
+      "note": "冷藏",
+      "id": "yIc5-WbzK_g",
+      "createdAt": "2026-06-25T07:01:13.836Z"
+    },
+    {
+      "supplierId": "s002",
+      "status": "CANCELLED",
+      "items": [
+        {
+          "ingredientId": "i003",
+          "quantity": 1,
+          "unitPrice": 500
+        }
+      ],
+      "totalAmount": 500,
+      "expectedDate": null,
+      "receivedDate": null,
+      "note": "溫體豬",
+      "id": "ipWNPG3P8Cs",
+      "createdAt": "2026-06-26T04:58:20.386Z"
+    },
+    {
+      "supplierId": "s002",
+      "status": "RECEIVED",
+      "items": [
+        {
+          "ingredientId": "i004",
+          "quantity": 5000,
+          "unitPrice": 1
+        }
+      ],
+      "totalAmount": 5000,
+      "expectedDate": "2026-06-30",
+      "receivedDate": "2026-06-30T05:05:08.005Z",
+      "note": "",
+      "id": "9sMUCQcfPVU",
+      "createdAt": "2026-06-30T05:05:02.490Z"
+    },
+    {
+      "supplierId": "s001",
+      "status": "RECEIVED",
+      "items": [
+        {
+          "ingredientId": "i002",
+          "quantity": 1650,
+          "unitPrice": 100
+        }
+      ],
+      "totalAmount": 165000,
+      "expectedDate": "2026-07-06",
+      "receivedDate": "2026-07-06T07:47:34.427Z",
+      "note": "急件",
+      "id": "htadeTjinZU",
+      "createdAt": "2026-07-06T07:47:27.718Z"
+    }
+  ],
+  "salesOrders": [
+    {
+      "status": "COMPLETED",
+      "items": [
+        {
+          "productId": "p001",
+          "quantity": 1,
+          "unitPrice": 180
+        }
+      ],
+      "subtotal": 180,
+      "taxAmount": 9,
+      "discount": 50,
+      "total": 139,
+      "channel": "DINE_IN",
+      "note": "加蔥",
+      "id": "JMFCWV-zn_s",
+      "createdAt": "2026-06-26T05:10:31.401Z",
+      "testBatchId": null
+    },
+    {
+      "status": "COMPLETED",
+      "items": [
+        {
+          "productId": "p003",
+          "quantity": 80,
+          "unitPrice": 65
+        }
+      ],
+      "subtotal": 5200,
+      "taxAmount": 260,
+      "discount": 0,
+      "total": 5460,
+      "channel": "DINE_IN",
+      "note": "flow 科技公司團購",
+      "id": "9d_rO3ygAN8",
+      "createdAt": "2026-06-30T04:56:24.059Z",
+      "testBatchId": null
+    },
+    {
+      "status": "COMPLETED",
+      "items": [
+        {
+          "productId": "p003",
+          "quantity": 100,
+          "unitPrice": 65
+        }
+      ],
+      "subtotal": 6500,
+      "taxAmount": 325,
+      "discount": 325,
+      "total": 6500,
+      "channel": "DINE_IN",
+      "note": "",
+      "id": "2n3GSUWR0ZI",
+      "createdAt": "2026-06-30T05:05:49.052Z",
+      "testBatchId": null
+    },
+    {
+      "status": "COMPLETED",
+      "items": [
+        {
+          "productId": "p001",
+          "quantity": 5,
+          "unitPrice": 180
+        }
+      ],
+      "subtotal": 900,
+      "taxAmount": 45,
+      "discount": 45,
+      "total": 900,
+      "channel": "DINE_IN",
+      "note": "加辣",
+      "id": "UQ8nD4OwVl4",
+      "createdAt": "2026-07-06T07:47:59.941Z",
+      "testBatchId": null
+    }
+  ],
+  "testRuns": [
+    {
+      "id": "Dov8Qdkwh0U",
+      "productId": "p001",
+      "productName": "招牌牛肉麵",
+      "ingredientSnapshots": [
+        {
+          "ingredientId": "i001",
+          "ingredientName": "牛腱肉",
+          "originalStock": 1801,
+          "originalVersion": 0,
+          "testStock": 1000
+        },
+        {
+          "ingredientId": "i002",
+          "ingredientName": "麵條",
+          "originalStock": 1250,
+          "originalVersion": 0,
+          "testStock": 750
+        }
+      ],
+      "testCapacity": 5,
+      "concurrentRequests": 100,
+      "status": "PREPARED",
+      "successCount": 0,
+      "failCount": 0,
+      "finalStockSnapshots": [],
+      "isOverSold": false,
+      "createdAt": "2026-08-26T03:52:41.238Z",
+      "completedAt": null
+    },
+    {
+      "id": "PW52EN6H-nE",
+      "productId": "p002",
+      "productName": "滷肉飯",
+      "ingredientSnapshots": [
+        {
+          "ingredientId": "i003",
+          "ingredientName": "豬五花肉",
+          "originalStock": 2000,
+          "originalVersion": 0,
+          "testStock": 400
+        }
+      ],
+      "testCapacity": 5,
+      "concurrentRequests": 100,
+      "status": "PREPARED",
+      "successCount": 0,
+      "failCount": 0,
+      "finalStockSnapshots": [],
+      "isOverSold": false,
+      "createdAt": "2026-08-26T03:52:48.337Z",
+      "completedAt": null
+    }
+  ],
+  "settings": {
+    "taxRate": 5,
+    "currency": "NTD",
+    "lowStockThreshold": 20,
+    "expiryWarningDays": 7
+  },
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -1,0 +1,32 @@
+# 一行指令啟動 MySQL＋API：docker compose up --build
+# 密碼從 .env 讀取（複製 .env.example 後填入），不寫死在檔案裡
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?請先在 .env 設定 DB_PASSWORD}
+      MYSQL_DATABASE: ris
+      TZ: Asia/Taipei
+    ports:
+      - "3307:3306"   # 用 3307，避免和本機已安裝的 MySQL（3306）衝突
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:      # 等 MySQL 真的可以連線，API 才啟動
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD}"]
+      interval: 5s
+      retries: 20
+
+  api:
+    build: .
+    environment:
+      DB_URL: jdbc:mysql://db:3306/ris?useUnicode=true&characterEncoding=utf8
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

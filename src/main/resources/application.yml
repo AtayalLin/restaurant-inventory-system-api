@@ -1,0 +1,23 @@
+# 連線資訊一律從環境變數讀取，密碼不寫在程式碼裡（見 README 與 .env.example）
+spring:
+  application:
+    name: restaurant-inventory-system-api
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/ris?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update   # 開發階段自動建表；正式環境改用 Flyway 管理版本（列為後續）
+    open-in-view: false  # 不在畫面渲染時延遲查詢資料庫，避免隱藏的效能問題
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC # 時間一律以 UTC 儲存，前端顯示時再轉台灣時間
+
+server:
+  port: ${PORT:8080}
+
+app:
+  seed:
+    enabled: ${APP_SEED:true}
